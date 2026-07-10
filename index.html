@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thai Semcon - Medicine Request</title>
+  
+  <!-- Fonts: Prompt -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    /* Color Variables */
+    :root {
+      --primary-purple: #7b5ab5;
+      --corporate-color: #412f66;
+      --light-purple: #f3f0fc;
+      --light-gray: #f4f6f9;
+      --light-green: #D4EDDA;
+      --success-green: #28a745;
+      --accent-color: #00d2ff;
+    }
+
+    body {
+      font-family: 'Prompt', sans-serif;
+      background-color: var(--light-gray);
+      color: #333;
+    }
+
+    /* Typography */
+    .text-corporate { color: var(--corporate-color); }
+    .bg-light-purple { background-color: var(--light-purple) !important; }
+    
+    /* Navbar Custom Gradient */
+    .navbar-custom {
+      background: linear-gradient(135deg, var(--corporate-color) 0%, var(--primary-purple) 100%);
+      padding: 12px 0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    
+    /* Logo Box (Fallback if img fails) */
+    .company-logo {
+      height: 45px;
+      margin-right: 12px;
+      background: white;
+      padding: 5px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      object-fit: contain;
+    }
+
+    /* Buttons */
+    .btn-primary-custom {
+      background: linear-gradient(135deg, var(--primary-purple) 0%, var(--corporate-color) 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-weight: 500;
+      box-shadow: 0 4px 15px rgba(123, 90, 181, 0.3);
+      transition: all 0.3s ease;
+    }
+    .btn-primary-custom:hover {
+      background: linear-gradient(135deg, var(--corporate-color) 0%, #2a1f42 100%);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(123, 90, 181, 0.4);
+    }
+    
+    .btn-corporate {
+      background-color: var(--corporate-color);
+      color: white;
+      border-radius: 8px;
+    }
+    .btn-corporate:hover {
+      background-color: #2a1f42;
+      color: white;
+    }
+
+    /* Outline Button on Navbar */
+    .btn-outline-light-custom {
+      border: 1px solid rgba(255,255,255,0.5);
+      color: white;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      transition: 0.3s;
+    }
+    .btn-outline-light-custom:hover {
+      background: white;
+      color: var(--corporate-color);
+    }
+
+    /* Cards & Forms */
+    .card {
+      border-radius: 16px;
+      border: none;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+      transition: transform 0.3s ease;
+    }
+    
+    .form-control, .form-select {
+      border-radius: 10px;
+      padding: 0.7rem 1rem;
+      border: 1px solid #e1e5eb;
+      background-color: #fbfbfc;
+    }
+    .form-control:focus, .form-select:focus {
+      border-color: var(--primary-purple);
+      background-color: #fff;
+      box-shadow: 0 0 0 4px rgba(123, 90, 181, 0.1);
+    }
+
+    /* Tables */
+    .table {
+      font-size: 0.95rem;
+    }
+    .table th {
+      font-weight: 600;
+      color: var(--corporate-color);
+      border-bottom: 2px solid #e1e5eb;
+      padding: 15px 10px;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+    }
+    .table td {
+      padding: 15px 10px;
+      vertical-align: middle;
+    }
+    .table tbody tr {
+      transition: all 0.2s;
+      border-bottom: 1px solid #f0f2f5;
+    }
+    .table tbody tr:hover {
+      background-color: var(--light-purple);
+      transform: scale(1.002);
+    }
+
+    /* Badges */
+    .status-badge {
+      padding: 0.4em 1em;
+      border-radius: 30px;
+      font-size: 0.85em;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+    .status-green { background-color: var(--light-green); color: #155724; }
+    .status-yellow { background-color: #fff3cd; color: #856404; }
+    .status-red { background-color: #f8d7da; color: #721c24; }
+
+    /* Dashboard Stats */
+    .stat-card {
+      transition: 0.3s;
+      border-radius: 16px;
+    }
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.08) !important;
+    }
+    .stat-card h3 {
+      font-weight: 700;
+      color: var(--corporate-color);
+    }
+
+    /* Image Preview in Admin */
+    .med-img-thumbnail {
+      width: 45px;
+      height: 45px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+    .med-img-placeholder {
+      width: 45px;
+      height: 45px;
+      border-radius: 8px;
+      background-color: #e9ecef;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #adb5bd;
+      font-size: 1.2rem;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .table-responsive { font-size: 0.85rem; }
+      .company-logo { height: 35px; }
+      .navbar-brand span { font-size: 1rem; }
+    }
+  
+  /* Multiple medicine request cart */
+  .medicine-picker-box {
+    background: #fbfbff;
+    border: 1px solid rgba(107, 75, 163, 0.12);
+  }
+  .medicine-cart-card {
+    border: 1px solid rgba(107, 75, 163, 0.12) !important;
+  }
+  .medicine-cart-table th {
+    font-size: 0.82rem;
+    white-space: nowrap;
+  }
+  .medicine-cart-table td {
+    vertical-align: middle;
+  }
+  @media (max-width: 768px) {
+    .medicine-picker-box {
+      padding: 1rem !important;
+    }
+    .medicine-cart-table {
+      font-size: 0.82rem;
+    }
+    .medicine-cart-table .btn {
+      padding: 0.25rem 0.5rem;
+    }
+  }
+
+  </style>
+</head>
+<body>
+
+  <!-- Navbar Custom Gradient -->
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="#" onclick="showView('homeView')">
+        <!-- ใส่ URL รูปภาพโลโก้ 40 ปี ตรง src="..." -->
+        <img src="https://i.ibb.co/8LfZLJtM/40-years-Logo-Final-Stock.png" alt="Thai Semcon 40 Years Logo" class="company-logo" style="height: 55px;" onerror="this.src='https://placehold.co/120x45/ffffff/4A3B69?text=TSC+40+Years'">
+        
+        <div class="d-flex flex-column">
+          <span class="fw-bold" data-i18n="appTitle" style="font-size: 1.1rem; line-height: 1;">Thai Semcon First Aid</span>
+          <span class="small text-white-50" style="font-size: 0.7rem; letter-spacing: 1px;">ISO45001:2018</span>
+        </div>
+      </a>
+      
+      <div class="d-flex align-items-center mt-2 mt-lg-0">
+        <select class="form-select form-select-sm me-3 border-0 shadow-sm text-corporate fw-medium" id="langSelector" onchange="changeLanguage(this.value)" style="width: 80px; background-color: rgba(255,255,255,0.9);">
+          <option value="th">TH</option>
+          <option value="en">EN</option>
+          <option value="jp">JP</option>
+        </select>
+        
+        <button class="btn btn-outline-light-custom btn-sm px-3" onclick="showAdminLogin()">
+          <i class="fas fa-user-shield me-1"></i> <span data-i18n="btnAdmin">Admin</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container my-4">
+    
+    <!-- ==================== HOME VIEW ==================== -->
+    <div id="homeView" class="view-section active">
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <div>
+          <h3 class="mb-0 fw-bold text-corporate" data-i18n="homeTitle">ประวัติการเบิกยา</h3>
+          <p class="text-muted small mb-0">FM-OHS-87 Medicine Request Records</p>
+        </div>
+        <button class="btn btn-primary-custom" onclick="showRequestForm()">
+          <i class="fas fa-plus-circle me-1"></i> <span data-i18n="btnRequest">บันทึกการเบิกยา</span>
+        </button>
+      </div>
+
+      <!-- Filters -->
+      <div class="card mb-4">
+        <div class="card-body p-4">
+          <div class="row g-3">
+            <div class="col-md-3">
+              <label class="form-label text-muted small fw-bold" data-i18n="filterDate">วันที่เบิก</label>
+              <div class="input-group">
+                <span class="input-group-text bg-white border-end-0 text-muted"><i class="far fa-calendar-alt"></i></span>
+                <input type="date" class="form-control border-start-0" id="filterDate" onchange="filterTable()">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label text-muted small fw-bold" data-i18n="filterName">ค้นหาชื่อ-สกุล</label>
+              <div class="input-group">
+                <span class="input-group-text bg-white border-end-0 text-muted"><i class="far fa-user"></i></span>
+                <input type="text" class="form-control border-start-0" id="filterName" placeholder="พิมพ์ชื่อผู้เบิก..." onkeyup="filterTable()">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label text-muted small fw-bold" data-i18n="filterCompany">ค้นหาบริษัท</label>
+              <div class="input-group">
+                <span class="input-group-text bg-white border-end-0 text-muted"><i class="far fa-building"></i></span>
+                <input type="text" class="form-control border-start-0" id="filterCompany" placeholder="พิมพ์ชื่อบริษัท..." onkeyup="filterTable()">
+              </div>
+            </div>
+            <div class="col-md-1 d-flex align-items-end">
+              <button class="btn btn-light w-100 border" style="padding: 0.7rem;" onclick="clearFilters()" title="รีเซ็ต"><i class="fas fa-sync-alt text-muted"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="card overflow-hidden">
+        <div class="card-body p-0 table-responsive">
+          <table class="table table-hover align-middle mb-0" id="historyTable">
+            <thead class="bg-light-purple">
+              <tr>
+                <th data-i18n="thDate">วันที่</th>
+                <th data-i18n="thName">ชื่อ-สกุล</th>
+                <th data-i18n="thCompany">บริษัท</th>
+                <th data-i18n="thSymptom">อาการป่วย</th>
+                <th data-i18n="thMedName">ชื่อยา (TH/EN)</th>
+                <th data-i18n="thQty" class="text-center">จำนวน</th>
+              </tr>
+            </thead>
+            <tbody id="historyTbody">
+              <tr><td colspan="6" class="text-center py-5"><div class="spinner-border text-corporate" role="status"></div><div class="mt-2 text-muted small">กำลังโหลดข้อมูล...</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== REQUEST FORM VIEW ==================== -->
+    <div id="requestView" class="view-section" style="display: none;">
+      <button class="btn btn-link text-decoration-none text-muted mb-3 p-0 fw-medium" onclick="showView('homeView')">
+        <i class="fas fa-arrow-left me-1"></i> <span data-i18n="btnBack">กลับไปหน้าแรก</span>
+      </button>
+      
+      <div class="card mx-auto" style="max-width: 800px;">
+        <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+          <div class="d-flex justify-content-center mb-3">
+             <!-- เปลี่ยนจากไอคอนกระเป๋าพยาบาล เป็นโลโก้ 40 ปี -->
+             <img src="https://i.ibb.co/8LfZLJtM/40-years-Logo-Final-Stock.png" alt="Thai Semcon 40 Years Logo" style="height: 75px; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));" onerror="this.style.display='none'">
+          </div>
+          <h4 class="fw-bold text-center text-corporate" data-i18n="formTitle">แบบฟอร์มเบิกยา (First Aid)</h4>
+          <p class="text-center text-muted small mb-0">ตามมาตรฐานระบบเอกสาร FM-OHS-87 / ISO45001:2018</p>
+        </div>
+        <div class="card-body p-4 p-md-5">
+          <form id="medRequestForm" onsubmit="submitForm(event)">
+            
+            <h6 class="text-corporate fw-bold mb-3 border-bottom pb-2" data-i18n="sectionUser"><i class="fas fa-user-circle me-1"></i> 1. ข้อมูลผู้เบิก</h6>
+            <div class="row g-3 mb-4">
+              <div class="col-md-6">
+                <label class="form-label fw-medium" data-i18n="lblDate">วันที่เปิดเบิก</label>
+                <input type="text" class="form-control bg-light text-muted" id="reqDate" readonly>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-medium" data-i18n="lblName">ชื่อ-นามสกุล <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="reqName" required placeholder="ระบุชื่อและนามสกุล">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-medium" data-i18n="lblCompany">บริษัท <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="reqCompany" required placeholder="ระบุชื่อบริษัทต้นสังกัด">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-medium" data-i18n="lblGender">เพศ <span class="text-danger">*</span></label>
+                <select class="form-select" id="reqGender" required>
+                  <option value="" disabled selected>-- เลือกเพศ --</option>
+                  <option value="ชาย">ชาย (Male)</option>
+                  <option value="หญิง">หญิง (Female)</option>
+                  <option value="อื่นๆ">อื่นๆ (Others)</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-medium" data-i18n="lblSymptom">อาการป่วย <span class="text-danger">*</span></label>
+                <textarea class="form-control" id="reqSymptom" rows="2" required placeholder="ระบุอาการป่วยเบื้องต้น..."></textarea>
+              </div>
+            </div>
+
+            <h6 class="text-corporate fw-bold mb-3 border-bottom pb-2 mt-4" data-i18n="sectionMed"><i class="fas fa-pills me-1"></i> 2. รายการยาที่ต้องการ</h6>
+            <div class="medicine-picker-box p-3 rounded-4 mb-4">
+              <div class="row g-3">
+                <div class="col-md-5">
+                  <label class="form-label fw-medium" data-i18n="lblCategory">หมวดยา <span class="text-danger">*</span></label>
+                  <select class="form-select" id="reqCategory" onchange="loadMedicines()">
+                    <option value="" disabled selected>เลือกหมวดยา...</option>
+                  </select>
+                </div>
+                <div class="col-md-5">
+                  <label class="form-label fw-medium" data-i18n="lblMedName">ชื่อยา <span class="text-danger">*</span></label>
+                  <select class="form-select" id="reqMed" onchange="displayMedInfo()" disabled>
+                    <option value="" disabled selected>กรุณาเลือกหมวดยาก่อน</option>
+                  </select>
+                </div>
+                <div class="col-md-2">
+                  <label class="form-label fw-medium" data-i18n="lblQty">จำนวน</label>
+                  <div class="qty-control-wrap">
+                    <button type="button" class="qty-btn" onclick="changeReqQty(-1)" aria-label="Decrease quantity">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <input type="number" class="form-control qty-input" id="reqQty" min="1" value="1" inputmode="numeric" pattern="[0-9]*" oninput="sanitizeReqQty()">
+                    <button type="button" class="qty-btn" onclick="changeReqQty(1)" aria-label="Increase quantity">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                    <span class="qty-unit" id="infoUnit2">หน่วย</span>
+                  </div>
+                </div>
+                <div class="col-12 d-grid">
+                  <button type="button" class="btn btn-light-green fw-bold" onclick="addMedicineItem()">
+                    <i class="fas fa-cart-plus me-2"></i><span data-i18n="btnAddMedItem">เพิ่มยาเข้ารายการ</span>
+                  </button>
+                  <small class="text-danger d-none mt-2" id="qtyError" data-i18n="errQty"><i class="fas fa-exclamation-circle"></i> จำนวนไม่เพียงพอ</small>
+                </div>
+              </div>
+            </div>
+
+            <!-- กล่องแสดงข้อมูลยา พร้อมรูปภาพ -->
+            <div id="medInfoBox" class="p-3 rounded mb-4 shadow-sm" style="display:none; background-color: var(--light-purple); border-left: 4px solid var(--primary-purple);">
+              <div class="row align-items-center">
+                <div class="col-md-3 text-center mb-3 mb-md-0">
+                  <!-- แท็กแสดงรูปภาพยา -->
+                  <img id="infoMedImage" src="" alt="Medicine Image" class="img-fluid rounded shadow-sm" style="max-height: 100px; display: none;">
+                  <div id="infoMedNoImage" class="text-muted small"><i class="fas fa-image fa-2x mb-1 text-black-50"></i><br>ไม่มีรูปภาพ</div>
+                </div>
+                <div class="col-md-9">
+                  <div class="row">
+                    <div class="col-md-5 mb-2 mb-md-0">
+                      <div class="small text-muted mb-1">EN Name</div>
+                      <div class="fw-bold text-corporate" id="infoMedEN">-</div>
+                    </div>
+                    <div class="col-md-4 mb-2 mb-md-0">
+                      <div class="small text-muted mb-1" data-i18n="infoExp">วันหมดอายุ</div>
+                      <div class="text-danger fw-medium" id="infoExp">-</div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="small text-muted mb-1" data-i18n="infoStock">คงเหลือ</div>
+                      <div><span class="fs-5 fw-bold text-success" id="infoStock">-</span> <span class="small" id="infoUnit1"></span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-5 medicine-cart-card">
+              <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 fw-bold text-corporate"><i class="fas fa-clipboard-list me-2"></i><span data-i18n="cartTitle">รายการยาที่เบิกในครั้งนี้</span></h6>
+                <span class="badge rounded-pill bg-light text-corporate border"><span id="medicineCartCount">0</span> รายการ</span>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 medicine-cart-table">
+                  <thead class="bg-light-purple">
+                    <tr>
+                      <th class="text-center" data-i18n="cartNo">ลำดับ</th>
+                      <th data-i18n="cartMedicine">ชื่อยา</th>
+                      <th class="text-center" data-i18n="cartQty">จำนวน</th>
+                      <th class="text-center" data-i18n="cartStock">คงเหลือ</th>
+                      <th class="text-center" data-i18n="cartAction">ลบ</th>
+                    </tr>
+                  </thead>
+                  <tbody id="medicineCartTbody">
+                    <tr><td colspan="5" class="text-center py-4 text-muted small">ยังไม่มีรายการยา กรุณาเลือกยาและกดเพิ่มรายการ</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary-custom w-100 py-3 fs-5" id="btnSubmit">
+              <i class="fas fa-paper-plane me-2"></i> <span data-i18n="btnSubmit">ยืนยันการเบิกยาทั้งหมด</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== ADMIN LOGIN ==================== -->
+    <div id="loginView" class="view-section" style="display: none;">
+      <div class="row justify-content-center align-items-center" style="min-height: 60vh;">
+        <div class="col-md-5 col-lg-4">
+          <div class="card p-5 text-center">
+            <div class="mb-4">
+              <div class="d-inline-flex align-items-center justify-content-center" style="width:80px; height:80px; border-radius:50%; background:var(--light-purple);">
+                <i class="fas fa-user-shield fa-3x text-corporate"></i>
+              </div>
+            </div>
+            <h4 class="fw-bold mb-2 text-corporate">Admin Access</h4>
+            <p class="text-muted small mb-4">กรุณาระบุรหัสพนักงาน (Staff ID)</p>
+            <input type="password" class="form-control form-control-lg text-center mb-3 bg-light fw-bold text-primary" id="adminCode" placeholder="•••••••" style="letter-spacing: 3px;" onkeypress="if(event.key === 'Enter') loginAdmin()">
+            <button class="btn btn-primary-custom w-100 py-2 mb-3" onclick="loginAdmin()">Login Securely</button>
+            <button class="btn btn-link text-muted text-decoration-none small" onclick="showView('homeView')">กลับไปหน้าแรก</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== ADMIN DASHBOARD ==================== -->
+    <div id="adminView" class="view-section" style="display: none;">
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <div>
+          <h3 class="mb-0 fw-bold text-corporate"><i class="fas fa-chart-line me-2"></i>Admin Dashboard</h3>
+          <p class="text-muted small mb-0">ระบบจัดการคลังยาและเวชภัณฑ์ (FM-OHS-86) | ผู้ดูแล: <span id="adminNameDisplay" class="fw-bold text-primary"></span></p>
+        </div>
+        <div>
+          <button class="btn btn-light-green me-2 shadow-sm" onclick="showAddStockModal()"><i class="fas fa-plus-circle me-1"></i> เพิ่มยาใหม่</button>
+          <button class="btn btn-outline-danger shadow-sm" onclick="showView('homeView')"><i class="fas fa-sign-out-alt me-1"></i> Logout</button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-4 col-sm-6"><div class="stat-card p-4 bg-white border-start border-4 border-primary"><div class="text-muted small fw-bold text-uppercase mb-1">รายการยาทั้งหมด</div><h2 class="mb-0" id="statTotalItems">0</h2></div></div>
+        <div class="col-md-4 col-sm-6"><div class="stat-card p-4 bg-white border-start border-4 border-success"><div class="text-muted small fw-bold text-uppercase mb-1">จำนวนยาคงเหลือรวม</div><h2 class="mb-0 text-success" id="statRemain">0</h2></div></div>
+        <div class="col-md-4 col-sm-6"><div class="stat-card p-4 bg-white border-start border-4 border-warning"><div class="text-muted small fw-bold text-uppercase mb-1">ยาใกล้หมดสต๊อก</div><h2 class="mb-0 text-warning" id="statLow">0</h2></div></div>
+        <div class="col-md-4 col-sm-6"><div class="stat-card p-4 bg-white border-start border-4 border-danger"><div class="text-muted small fw-bold text-uppercase mb-1">ยาหมดอายุ</div><h2 class="mb-0 text-danger" id="statExp">0</h2></div></div>
+        <div class="col-md-4 col-sm-6"><div class="stat-card p-4 bg-white border-start border-4 border-info"><div class="text-muted small fw-bold text-uppercase mb-1">เบิกยาวันนี้</div><h2 class="mb-0 text-info" id="statReqToday">0</h2></div></div>
+        <div class="col-md-4 col-sm-6"><div class="stat-card p-4 bg-white border-start border-4 border-secondary"><div class="text-muted small fw-bold text-uppercase mb-1">เบิกยาเดือนนี้</div><h2 class="mb-0 text-secondary" id="statReqMonth">0</h2></div></div>
+      </div>
+
+      <!-- Symptom Stats Card -->
+      <div class="card mb-4">
+        <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+          <h5 class="mb-0 fw-bold text-corporate"><i class="fas fa-head-side-cough me-2"></i>สถิติอาการเจ็บป่วยที่พบบ่อย (Top Symptoms)</h5>
+        </div>
+        <div class="card-body p-4">
+          <div id="symptomStatsContainer" class="row g-3">
+            <div class="text-center text-muted"><div class="spinner-border spinner-border-sm"></div> กำลังคำนวณข้อมูล...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stock Table -->
+      <div class="card">
+        <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+          <h5 class="mb-0 fw-bold text-corporate"><i class="fas fa-boxes me-2"></i>ตารางคลังยา</h5>
+        </div>
+        <div class="card-body p-0 table-responsive">
+          <table class="table table-hover align-middle mb-0" id="stockTable">
+            <thead class="bg-light">
+              <tr>
+                <th>หมวดยา</th>
+                <th>ชื่อยา (TH/EN)</th>
+                <th class="text-center">นำเข้า</th>
+                <th class="text-center">คงเหลือ</th>
+                <th class="text-center">หน่วย</th>
+                <th>วันผลิต</th>
+                <th>วันหมดอายุ</th>
+                <th class="text-center">ผู้บันทึก</th>
+                <th class="text-center">สถานะ</th>
+                <th class="text-center">จัดการ</th>
+              </tr>
+            </thead>
+            <tbody id="stockTbody">
+              <tr><td colspan="10" class="text-center py-5"><div class="spinner-border text-primary" role="status"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div> <!-- End Container -->
+
+  <!-- Modal: Add Stock -->
+  <div class="modal fade" id="addStockModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius: 16px; border:none; box-shadow: 0 15px 40px rgba(0,0,0,0.1);">
+        <div class="modal-header bg-light-purple border-bottom-0 py-3">
+          <h5 class="modal-title fw-bold text-corporate"><i class="fas fa-plus-circle me-2"></i>เพิ่มข้อมูลยาเข้าระบบ</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <form id="addStockForm" onsubmit="submitNewStock(event)">
+            <div class="mb-3">
+              <label class="form-label fw-medium text-muted small">หมวดยา</label>
+              <select class="form-select" id="addCat" required>
+                <option value="" disabled selected>เลือกหมวดยา...</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-medium text-muted small">ชื่อยา (TH)</label>
+              <input type="text" class="form-control" id="addMedTH" required placeholder="เช่น ดีคอลเจน">
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-medium text-muted small">ชื่อยา (EN)</label>
+              <input type="text" class="form-control" id="addMedEN" placeholder="เช่น Decolgen">
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-medium text-muted small">URL รูปภาพยา (ถ้ามี)</label>
+              <input type="url" class="form-control" id="addImgUrl" placeholder="https://example.com/image.png">
+            </div>
+            <div class="row mb-3">
+              <div class="col-6"><label class="form-label fw-medium text-muted small">จำนวนนำเข้า</label><input type="number" class="form-control" id="addQty" required placeholder="0"></div>
+              <div class="col-6"><label class="form-label fw-medium text-muted small">หน่วย</label><input type="text" class="form-control" id="addUnit" required placeholder="เช่น เม็ด, แผง"></div>
+            </div>
+            <div class="row mb-4">
+              <div class="col-6"><label class="form-label fw-medium text-muted small">วันที่ผลิต</label><input type="date" class="form-control" id="addMfg" required></div>
+              <div class="col-6"><label class="form-label fw-medium text-muted small">วันหมดอายุ</label><input type="date" class="form-control" id="addExp" required></div>
+            </div>
+            <div class="mb-4">
+              <label class="form-label fw-medium text-muted small">Lot No. (ถ้ามี)</label>
+              <input type="text" class="form-control" id="addLot" placeholder="ระบุเลขล็อต...">
+            </div>
+            <button type="submit" class="btn btn-primary-custom w-100 py-2" id="btnAddStockSubmit">
+              <i class="fas fa-save me-2"></i> บันทึกข้อมูล
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Edit Stock -->
+  <div class="modal fade" id="editStockModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius: 16px; border:none; box-shadow: 0 15px 40px rgba(0,0,0,0.1);">
+        <div class="modal-header bg-light border-bottom-0 py-3">
+          <h5 class="modal-title fw-bold text-corporate"><i class="fas fa-edit me-2"></i>แก้ไขข้อมูลยา</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <form id="editStockForm" onsubmit="submitEditStock(event)">
+            <input type="hidden" id="editRowIndex">
+            
+            <div class="mb-3">
+              <label class="form-label fw-medium text-muted small">หมวดยา</label>
+              <select class="form-select bg-light" id="editCat" required>
+                <!-- Options โหลดผ่าน JS -->
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-medium text-muted small">ชื่อยา (TH)</label>
+              <input type="text" class="form-control fw-bold" id="editMedTH" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-medium text-muted small">ชื่อยา (EN)</label>
+              <input type="text" class="form-control" id="editMedEN">
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-medium text-muted small">URL รูปภาพยา (ถ้ามี)</label>
+              <input type="url" class="form-control" id="editImgUrl" placeholder="https://example.com/image.png">
+            </div>
+            <div class="row mb-3">
+              <div class="col-4"><label class="form-label fw-medium text-muted small">ยอดนำเข้า</label><input type="number" class="form-control" id="editImportQty" required></div>
+              <div class="col-4"><label class="form-label fw-medium text-primary small">ยอดคงเหลือ</label><input type="number" class="form-control border-primary fw-bold" id="editRemainQty" required></div>
+              <div class="col-4"><label class="form-label fw-medium text-muted small">หน่วย</label><input type="text" class="form-control" id="editUnit" required></div>
+            </div>
+            <div class="row mb-4">
+              <div class="col-6"><label class="form-label fw-medium text-muted small">วันที่ผลิต</label><input type="date" class="form-control" id="editMfg" required></div>
+              <div class="col-6"><label class="form-label fw-medium text-muted small">วันหมดอายุ</label><input type="date" class="form-control" id="editExp" required></div>
+            </div>
+            <div class="mb-4">
+              <label class="form-label fw-medium text-muted small">Lot No.</label>
+              <input type="text" class="form-control" id="editLot">
+            </div>
+            <button type="submit" class="btn btn-warning w-100 py-2 fw-bold text-dark shadow-sm" id="btnEditStockSubmit">
+              <i class="fas fa-save me-2"></i> อัปเดตข้อมูล
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+  /**
+   * Frontend Logic for Thai Semcon Medicine System
+   * Fixed i18n: TH / EN / JP - Full UI Translation
+   */
+
+  // --- MOCK API FOR PREVIEW ---
+  if (typeof google === 'undefined') {
+    console.warn('Running in Preview Mode: Mocking Google Apps Script API');
+    window.google = {
+      script: {
+        run: {
+          withSuccessHandler: function(callback) {
+            return {
+              getBorrowRecords: function() {
+                setTimeout(() => callback([
+                  { Timestamp: new Date().toISOString(), RequestID: 'MED-2026-0001', Date: '24/04/2026', Name: 'Somchai', Company: 'Thai Semcon', Gender: 'ชาย', Symptom: 'ปวดหัว', Category: 'ยาแก้ปวด ลดไข้', MedTH: 'พาราเซตามอล', MedEN: 'Paracetamol', Qty: 2, Unit: 'เม็ด' }
+                ]), 300);
+              },
+              getMedicineCategories: function() { setTimeout(() => callback(MEDICINE_CATEGORIES), 300); },
+              getMedicinesByCategory: function(cat) { setTimeout(() => callback([{ nameTH: 'ดีคอลเจน', nameEN: 'Decolgen', remainQty: 100, unit: 'เม็ด', exp: '01/01/2028', imageUrl: 'https://placehold.co/150x150/e6e6fa/6B4BA3?text=Medicine' }]), 300); },
+              submitMedicineRequest: function(data) { setTimeout(() => callback({ success: true, message: 'ขอให้ท่านหายป่วยไวๆ' }), 500); },
+              validateAdminCode: function(code) { setTimeout(() => callback({ success: true, name: 'Preview Admin', message: 'เข้าสู่ระบบสำเร็จ' }), 300); },
+              getStockDashboard: function() {
+                setTimeout(() => callback({
+                  totalItems: 1, totalRemaining: 100, lowStock: 0, expired: 0, reqToday: 1, reqMonth: 5,
+                  stockList: [{ rowIndex: 2, category: '5. ยาบรรเทาปวด ลดไข้', medTH: 'ดีคอลเจน', medEN: 'Decolgen', importQty: 200, remainQty: 100, unit: 'เม็ด', mfg: '01/01/2026', exp: '01/01/2028', recorder: 'Thossapol', status: 'พร้อมใช้งาน', lot: 'LOT123', imageUrl: 'https://placehold.co/150x150/e6e6fa/6B4BA3?text=Med' }]
+                }), 300);
+              },
+              addMedicineStock: function(data) { setTimeout(() => callback({ success: true, message: 'เพิ่มรายการยาสำเร็จ' }), 500); },
+              updateMedicineStock: function(data) { setTimeout(() => callback({ success: true, message: 'อัปเดตข้อมูลสำเร็จ' }), 500); }
+            };
+          }
+        }
+      }
+    };
+  }
+
+  const dict = {
+    th: {
+      appTitle: 'Thai Semcon First Aid', isoText: 'ISO45001:2018', btnAdmin: 'ผู้ดูแลระบบ',
+      homeTitle: 'ประวัติการเบิกยา', homeSubtitle: 'FM-OHS-87 ประวัติการเบิกยา', btnRequest: 'บันทึกการเบิกยา',
+      filterDate: 'วันที่เบิก', filterName: 'ค้นหาชื่อ-สกุล', filterCompany: 'ค้นหาบริษัท',
+      phFilterName: 'พิมพ์ชื่อผู้เบิก...', phFilterCompany: 'พิมพ์ชื่อบริษัท...', btnReset: 'รีเซ็ต',
+      thDate: 'วันที่', thName: 'ชื่อ-สกุล', thCompany: 'บริษัท', thSymptom: 'อาการป่วย', thMedName: 'ชื่อยา (TH/EN)', thQty: 'จำนวน',
+      loadingData: 'กำลังโหลดข้อมูล...', noHistory: 'ยังไม่มีข้อมูลการเบิกยา', noData: 'ไม่มีข้อมูล',
+      btnBack: 'กลับไปหน้าแรก', formTitle: 'แบบฟอร์มเบิกยา (First Aid)', formSubtitle: 'ตามมาตรฐานระบบเอกสาร FM-OHS-87 / ISO45001:2018',
+      sectionUser: '<i class="fas fa-user-circle me-1"></i> 1. ข้อมูลผู้เบิก', sectionMed: '<i class="fas fa-pills me-1"></i> 2. รายการยาที่ต้องการ',
+      lblDate: 'วันที่เปิดเบิก', lblName: 'ชื่อ-นามสกุล <span class="text-danger">*</span>', lblCompany: 'บริษัท <span class="text-danger">*</span>', lblGender: 'เพศ <span class="text-danger">*</span>', lblSymptom: 'อาการป่วย <span class="text-danger">*</span>',
+      lblCategory: 'หมวดยา <span class="text-danger">*</span>', lblMedName: 'ชื่อยา <span class="text-danger">*</span>', lblQty: 'จำนวนที่ต้องการเบิก <span class="text-danger">*</span>',
+      phName: 'ระบุชื่อและนามสกุล', phCompany: 'ระบุชื่อบริษัทต้นสังกัด', phSymptom: 'ระบุอาการป่วยเบื้องต้น...', phQty: '0',
+      genderPlaceholder: '-- เลือกเพศ --', genderMale: 'ชาย', genderFemale: 'หญิง', genderOther: 'อื่นๆ',
+      selectCategory: 'เลือกหมวดยา...', selectCategoryFirst: 'กรุณาเลือกหมวดยาก่อน', loading: 'กำลังโหลด...', selectMedicine: 'เลือกยา...',
+      noImage: '<i class="fas fa-image fa-2x mb-1 text-black-50"></i><br>ไม่มีรูปภาพ', enName: 'EN Name', infoExp: 'วันหมดอายุ', infoStock: 'คงเหลือ', unitDefault: 'หน่วย', errQty: '<i class="fas fa-exclamation-circle"></i> จำนวนไม่เพียงพอ', btnSubmit: 'ยืนยันการเบิกยา',
+      adminAccess: 'Admin Access', adminLoginHelp: 'กรุณาระบุรหัสพนักงาน (Staff ID)', btnLogin: 'Login Securely', phAdminCode: '•••••••',
+      adminTitle: '<i class="fas fa-chart-line me-2"></i>Admin Dashboard', adminSubtitle: 'ระบบจัดการคลังยาและเวชภัณฑ์ (FM-OHS-86) | ผู้ดูแล:', btnAddNew: 'เพิ่มยาใหม่', btnLogout: 'Logout',
+      statTotalItems: 'รายการยาทั้งหมด', statRemain: 'จำนวนยาคงเหลือรวม', statLow: 'ยาใกล้หมดสต๊อก', statExp: 'ยาหมดอายุ', statReqToday: 'เบิกยาวันนี้', statReqMonth: 'เบิกยาเดือนนี้',
+      symptomTitle: '<i class="fas fa-head-side-cough me-2"></i>สถิติอาการเจ็บป่วยที่พบบ่อย (Top Symptoms)', symptomLoading: 'กำลังคำนวณข้อมูล...', noSymptoms: 'ยังไม่มีข้อมูลอาการเจ็บป่วยในระบบ', times: 'ครั้ง', percentAll: 'ของทั้งหมด',
+      stockTitle: '<i class="fas fa-boxes me-2"></i>ตารางคลังยา', stockCategory: 'หมวดยา', stockMedName: 'ชื่อยา (TH/EN)', stockImport: 'นำเข้า', stockRemain: 'คงเหลือ', stockUnit: 'หน่วย', stockMfg: 'วันผลิต', stockExp: 'วันหมดอายุ', stockRecorder: 'ผู้บันทึก', stockStatus: 'สถานะ', stockAction: 'จัดการ', editTitleAttr: 'แก้ไขข้อมูล',
+      addModalTitle: '<i class="fas fa-plus-circle me-2"></i>เพิ่มข้อมูลยาเข้าระบบ', editModalTitle: '<i class="fas fa-edit me-2"></i>แก้ไขข้อมูลยา',
+      addCat: 'หมวดยา', addMedTH: 'ชื่อยา (TH)', addMedEN: 'ชื่อยา (EN)', imgUrl: 'URL รูปภาพยา (ถ้ามี)', addQty: 'จำนวนนำเข้า', addUnit: 'หน่วย', addMfg: 'วันที่ผลิต', addExp: 'วันหมดอายุ', addLot: 'Lot No. (ถ้ามี)', btnSave: 'บันทึกข้อมูล',
+      editCat: 'หมวดยา', editMedTH: 'ชื่อยา (TH)', editMedEN: 'ชื่อยา (EN)', editImportQty: 'ยอดนำเข้า', editRemainQty: 'ยอดคงเหลือ', editUnit: 'หน่วย', editMfg: 'วันที่ผลิต', editExp: 'วันหมดอายุ', editLot: 'Lot No.', btnUpdate: 'อัปเดตข้อมูล',
+      phMedTH: 'เช่น ดีคอลเจน', phMedEN: 'เช่น Decolgen', phImg: 'https://example.com/image.png', phUnit: 'เช่น เม็ด, แผง', phLot: 'ระบุเลขล็อต...',
+      alertWarning: 'แจ้งเตือน', alertChooseMed: 'กรุณาเลือกยา', alertSaving: 'กำลังบันทึก...', alertUpdating: 'กำลังอัปเดต...', alertSaved: 'บันทึกสำเร็จ!', alertError: 'เกิดข้อผิดพลาด', alertAdminCode: 'กรุณากรอกรหัสพนักงาน', alertAdminInvalid: 'รหัสพนักงานไม่ถูกต้อง ไม่มีสิทธิ์เข้าถึง', alertAddSuccess: 'เพิ่มข้อมูลสำเร็จ', alertUpdateSuccess: 'อัปเดตข้อมูลสำเร็จ',
+      statusReady: 'พร้อมใช้งาน', statusLow: 'ใกล้หมด', statusOut: 'หมดสต๊อก', statusExpired: 'หมดอายุ',
+      btnAddMedItem: 'เพิ่มยาเข้ารายการ', cartTitle: 'รายการยาที่เบิกในครั้งนี้', cartEmpty: 'ยังไม่มีรายการยา กรุณาเลือกยาและกดเพิ่มรายการ', cartNo: 'ลำดับ', cartMedicine: 'ชื่อยา', cartQty: 'จำนวน', cartStock: 'คงเหลือ', cartAction: 'ลบ', alertAddItemFirst: 'กรุณาเพิ่มรายการยาอย่างน้อย 1 รายการ', alertQtyInvalid: 'กรุณาระบุจำนวนให้ถูกต้อง', alertDuplicateLimit: 'จำนวนรวมของยานี้เกินสต๊อกคงเหลือ', alertItemAdded: 'เพิ่มรายการยาแล้ว', btnSubmitMulti: 'ยืนยันการเบิกยาทั้งหมด'
+    },
+    en: {
+      appTitle: 'Thai Semcon First Aid', isoText: 'ISO45001:2018', btnAdmin: 'Admin',
+      homeTitle: 'Medicine Request History', homeSubtitle: 'FM-OHS-87 Medicine Request Records', btnRequest: 'New Medicine Request',
+      filterDate: 'Request Date', filterName: 'Search Name', filterCompany: 'Search Company',
+      phFilterName: 'Type requester name...', phFilterCompany: 'Type company name...', btnReset: 'Reset',
+      thDate: 'Date', thName: 'Name', thCompany: 'Company', thSymptom: 'Symptom', thMedName: 'Medicine (TH/EN)', thQty: 'Qty',
+      loadingData: 'Loading data...', noHistory: 'No medicine request records found', noData: 'No data',
+      btnBack: 'Back to Home', formTitle: 'Medicine Request Form (First Aid)', formSubtitle: 'Document Standard FM-OHS-87 / ISO45001:2018',
+      sectionUser: '<i class="fas fa-user-circle me-1"></i> 1. Requester Information', sectionMed: '<i class="fas fa-pills me-1"></i> 2. Required Medicine',
+      lblDate: 'Request Date', lblName: 'Full Name <span class="text-danger">*</span>', lblCompany: 'Company <span class="text-danger">*</span>', lblGender: 'Gender <span class="text-danger">*</span>', lblSymptom: 'Symptom <span class="text-danger">*</span>',
+      lblCategory: 'Medicine Category <span class="text-danger">*</span>', lblMedName: 'Medicine Name <span class="text-danger">*</span>', lblQty: 'Request Quantity <span class="text-danger">*</span>',
+      phName: 'Enter full name', phCompany: 'Enter company name', phSymptom: 'Enter initial symptoms...', phQty: '0',
+      genderPlaceholder: '-- Select Gender --', genderMale: 'Male', genderFemale: 'Female', genderOther: 'Others',
+      selectCategory: 'Select category...', selectCategoryFirst: 'Please select category first', loading: 'Loading...', selectMedicine: 'Select medicine...',
+      noImage: '<i class="fas fa-image fa-2x mb-1 text-black-50"></i><br>No image', enName: 'EN Name', infoExp: 'Expiry Date', infoStock: 'In Stock', unitDefault: 'Unit', errQty: '<i class="fas fa-exclamation-circle"></i> Not enough stock', btnSubmit: 'Submit Request',
+      adminAccess: 'Admin Access', adminLoginHelp: 'Please enter Staff ID', btnLogin: 'Login Securely', phAdminCode: '•••••••',
+      adminTitle: '<i class="fas fa-chart-line me-2"></i>Admin Dashboard', adminSubtitle: 'Medicine & First Aid Stock Management (FM-OHS-86) | Admin:', btnAddNew: 'Add New Medicine', btnLogout: 'Logout',
+      statTotalItems: 'Total Medicine Items', statRemain: 'Total Remaining Stock', statLow: 'Low Stock Items', statExp: 'Expired Items', statReqToday: 'Requests Today', statReqMonth: 'Requests This Month',
+      symptomTitle: '<i class="fas fa-head-side-cough me-2"></i>Top Symptoms Statistics', symptomLoading: 'Calculating data...', noSymptoms: 'No symptom data in the system', times: 'times', percentAll: 'of total',
+      stockTitle: '<i class="fas fa-boxes me-2"></i>Medicine Stock Table', stockCategory: 'Category', stockMedName: 'Medicine (TH/EN)', stockImport: 'Imported', stockRemain: 'Remaining', stockUnit: 'Unit', stockMfg: 'MFG Date', stockExp: 'EXP Date', stockRecorder: 'Recorder', stockStatus: 'Status', stockAction: 'Action', editTitleAttr: 'Edit data',
+      addModalTitle: '<i class="fas fa-plus-circle me-2"></i>Add Medicine to System', editModalTitle: '<i class="fas fa-edit me-2"></i>Edit Medicine Data',
+      addCat: 'Category', addMedTH: 'Medicine Name (TH)', addMedEN: 'Medicine Name (EN)', imgUrl: 'Medicine Image URL (optional)', addQty: 'Imported Qty', addUnit: 'Unit', addMfg: 'MFG Date', addExp: 'EXP Date', addLot: 'Lot No. (optional)', btnSave: 'Save Data',
+      editCat: 'Category', editMedTH: 'Medicine Name (TH)', editMedEN: 'Medicine Name (EN)', editImportQty: 'Imported Qty', editRemainQty: 'Remaining Qty', editUnit: 'Unit', editMfg: 'MFG Date', editExp: 'EXP Date', editLot: 'Lot No.', btnUpdate: 'Update Data',
+      phMedTH: 'e.g. Decolgen in Thai', phMedEN: 'e.g. Decolgen', phImg: 'https://example.com/image.png', phUnit: 'e.g. tablet, strip', phLot: 'Enter lot number...',
+      alertWarning: 'Warning', alertChooseMed: 'Please select medicine', alertSaving: 'Saving...', alertUpdating: 'Updating...', alertSaved: 'Saved successfully!', alertError: 'Error', alertAdminCode: 'Please enter Staff ID', alertAdminInvalid: 'Invalid Staff ID or access denied', alertAddSuccess: 'Added successfully', alertUpdateSuccess: 'Updated successfully',
+      statusReady: 'Ready to Use', statusLow: 'Low Stock', statusOut: 'Out of Stock', statusExpired: 'Expired',
+      btnAddMedItem: 'Add Medicine to List', cartTitle: 'Medicines Requested This Time', cartEmpty: 'No medicine selected. Please choose medicine and click add.', cartNo: 'No.', cartMedicine: 'Medicine', cartQty: 'Qty', cartStock: 'In Stock', cartAction: 'Remove', alertAddItemFirst: 'Please add at least one medicine item.', alertQtyInvalid: 'Please enter a valid quantity.', alertDuplicateLimit: 'Total quantity for this medicine exceeds remaining stock.', alertItemAdded: 'Medicine added to list.', btnSubmitMulti: 'Submit All Medicine Requests'
+    },
+    jp: {
+      appTitle: 'Thai Semcon First Aid', isoText: 'ISO45001:2018', btnAdmin: '管理者',
+      homeTitle: '薬品払出履歴', homeSubtitle: 'FM-OHS-87 薬品払出記録', btnRequest: '薬品払出を記録',
+      filterDate: '払出日', filterName: '氏名検索', filterCompany: '会社検索',
+      phFilterName: '申請者名を入力...', phFilterCompany: '会社名を入力...', btnReset: 'リセット',
+      thDate: '日付', thName: '氏名', thCompany: '会社', thSymptom: '症状', thMedName: '薬品名 (TH/EN)', thQty: '数量',
+      loadingData: 'データを読み込み中...', noHistory: '薬品払出記録はありません', noData: 'データなし',
+      btnBack: 'ホームに戻る', formTitle: '薬品払出フォーム (First Aid)', formSubtitle: '文書標準 FM-OHS-87 / ISO45001:2018',
+      sectionUser: '<i class="fas fa-user-circle me-1"></i> 1. 申請者情報', sectionMed: '<i class="fas fa-pills me-1"></i> 2. 必要な薬品',
+      lblDate: '申請日', lblName: '氏名 <span class="text-danger">*</span>', lblCompany: '会社 <span class="text-danger">*</span>', lblGender: '性別 <span class="text-danger">*</span>', lblSymptom: '症状 <span class="text-danger">*</span>',
+      lblCategory: '薬品カテゴリー <span class="text-danger">*</span>', lblMedName: '薬品名 <span class="text-danger">*</span>', lblQty: '申請数量 <span class="text-danger">*</span>',
+      phName: '氏名を入力', phCompany: '会社名を入力', phSymptom: '初期症状を入力...', phQty: '0',
+      genderPlaceholder: '-- 性別を選択 --', genderMale: '男性', genderFemale: '女性', genderOther: 'その他',
+      selectCategory: 'カテゴリーを選択...', selectCategoryFirst: '先にカテゴリーを選択してください', loading: '読み込み中...', selectMedicine: '薬品を選択...',
+      noImage: '<i class="fas fa-image fa-2x mb-1 text-black-50"></i><br>画像なし', enName: '英語名', infoExp: '有効期限', infoStock: '在庫', unitDefault: '単位', errQty: '<i class="fas fa-exclamation-circle"></i> 在庫が不足しています', btnSubmit: '申請を送信',
+      adminAccess: '管理者アクセス', adminLoginHelp: 'スタッフIDを入力してください', btnLogin: 'ログイン', phAdminCode: '•••••••',
+      adminTitle: '<i class="fas fa-chart-line me-2"></i>管理者ダッシュボード', adminSubtitle: '薬品・救急用品在庫管理 (FM-OHS-86) | 管理者:', btnAddNew: '薬品を追加', btnLogout: 'ログアウト',
+      statTotalItems: '薬品総項目', statRemain: '総在庫数', statLow: '在庫少', statExp: '期限切れ', statReqToday: '本日の払出', statReqMonth: '今月の払出',
+      symptomTitle: '<i class="fas fa-head-side-cough me-2"></i>よく見られる症状統計', symptomLoading: 'データを計算中...', noSymptoms: '症状データはありません', times: '回', percentAll: '全体',
+      stockTitle: '<i class="fas fa-boxes me-2"></i>薬品在庫表', stockCategory: 'カテゴリー', stockMedName: '薬品名 (TH/EN)', stockImport: '入庫', stockRemain: '在庫', stockUnit: '単位', stockMfg: '製造日', stockExp: '有効期限', stockRecorder: '記録者', stockStatus: '状態', stockAction: '操作', editTitleAttr: '編集',
+      addModalTitle: '<i class="fas fa-plus-circle me-2"></i>薬品情報を追加', editModalTitle: '<i class="fas fa-edit me-2"></i>薬品情報を編集',
+      addCat: 'カテゴリー', addMedTH: '薬品名 (TH)', addMedEN: '薬品名 (EN)', imgUrl: '薬品画像URL（任意）', addQty: '入庫数量', addUnit: '単位', addMfg: '製造日', addExp: '有効期限', addLot: 'Lot No.（任意）', btnSave: '保存',
+      editCat: 'カテゴリー', editMedTH: '薬品名 (TH)', editMedEN: '薬品名 (EN)', editImportQty: '入庫数量', editRemainQty: '残数量', editUnit: '単位', editMfg: '製造日', editExp: '有効期限', editLot: 'Lot No.', btnUpdate: '更新',
+      phMedTH: '例：タイ語の薬品名', phMedEN: '例：Decolgen', phImg: 'https://example.com/image.png', phUnit: '例：錠、シート', phLot: 'ロット番号を入力...',
+      alertWarning: '注意', alertChooseMed: '薬品を選択してください', alertSaving: '保存中...', alertUpdating: '更新中...', alertSaved: '保存しました', alertError: 'エラー', alertAdminCode: 'スタッフIDを入力してください', alertAdminInvalid: 'スタッフIDが無効、または権限がありません', alertAddSuccess: '追加しました', alertUpdateSuccess: '更新しました',
+      statusReady: '使用可能', statusLow: '残りわずか', statusOut: '在庫切れ', statusExpired: '期限切れ',
+      btnAddMedItem: '薬品をリストに追加', cartTitle: '今回申請する薬品リスト', cartEmpty: '薬品が未選択です。薬品を選択して追加してください。', cartNo: 'No.', cartMedicine: '薬品名', cartQty: '数量', cartStock: '在庫', cartAction: '削除', alertAddItemFirst: '薬品を1件以上追加してください。', alertQtyInvalid: '正しい数量を入力してください。', alertDuplicateLimit: 'この薬品の合計数量が在庫を超えています。', alertItemAdded: '薬品を追加しました。', btnSubmitMulti: 'すべての薬品申請を送信'
+    }
+  };
+
+  const MEDICINE_CATEGORIES = [
+    '1. ยาแก้ปวดท้อง ท้องอืด ท้องขึ้น ท้องเฟ้อ', '2. ยาแก้ท้องเสีย', '3. ยาระบาย', '4. ยาถ่ายพยาธิลำไส้', '5. ยาบรรเทาปวด ลดไข้', '6. ยาแก้แพ้ ลดน้ำมูก', '7. ยาแก้ไอ ขับเสมหะ', '8. ยาดมหรือทาแก้วิงเวียน หน้ามืด คัดจมูก', '9. ยาแก้เมารถ เมาเรือ', '10. ยาสำหรับโรคตา', '11. ยาสำหรับโรคปากและลำคอ', '12. ยาใส่แผล ล้างแผล', '13. ยารักษาแผลติดเชื้อ ไฟไหม้ น้ำร้อนลวก', '14. ยาบรรเทาอาการปวดกล้ามเนื้อ แมลงกัดต่อย', '15. ยาสำหรับโรคผิวหนัง', '16. ยาบำรุงร่างกาย'
+  ];
+
+  const categoryText = {
+    en: {
+      '1. ยาแก้ปวดท้อง ท้องอืด ท้องขึ้น ท้องเฟ้อ': '1. Stomach pain / bloating medicine', '2. ยาแก้ท้องเสีย': '2. Anti-diarrhea medicine', '3. ยาระบาย': '3. Laxative', '4. ยาถ่ายพยาธิลำไส้': '4. Deworming medicine', '5. ยาบรรเทาปวด ลดไข้': '5. Pain relief / fever reducer', '6. ยาแก้แพ้ ลดน้ำมูก': '6. Allergy / runny nose medicine', '7. ยาแก้ไอ ขับเสมหะ': '7. Cough / expectorant medicine', '8. ยาดมหรือทาแก้วิงเวียน หน้ามืด คัดจมูก': '8. Inhaler / dizziness / nasal relief', '9. ยาแก้เมารถ เมาเรือ': '9. Motion sickness medicine', '10. ยาสำหรับโรคตา': '10. Eye medicine', '11. ยาสำหรับโรคปากและลำคอ': '11. Mouth and throat medicine', '12. ยาใส่แผล ล้างแผล': '12. Wound care / cleansing medicine', '13. ยารักษาแผลติดเชื้อ ไฟไหม้ น้ำร้อนลวก': '13. Infection / burn treatment medicine', '14. ยาบรรเทาอาการปวดกล้ามเนื้อ แมลงกัดต่อย': '14. Muscle pain / insect bite relief', '15. ยาสำหรับโรคผิวหนัง': '15. Skin medicine', '16. ยาบำรุงร่างกาย': '16. Supplement / tonic'
+    },
+    jp: {
+      '1. ยาแก้ปวดท้อง ท้องอืด ท้องขึ้น ท้องเฟ้อ': '1. 胃痛・膨満感用薬', '2. ยาแก้ท้องเสีย': '2. 下痢止め', '3. ยาระบาย': '3. 便秘薬', '4. ยาถ่ายพยาธิลำไส้': '4. 駆虫薬', '5. ยาบรรเทาปวด ลดไข้': '5. 鎮痛・解熱薬', '6. ยาแก้แพ้ ลดน้ำมูก': '6. アレルギー・鼻水用薬', '7. ยาแก้ไอ ขับเสมหะ': '7. 咳・去痰薬', '8. ยาดมหรือทาแก้วิงเวียน หน้ามืด คัดจมูก': '8. 吸入薬・めまい・鼻づまり用', '9. ยาแก้เมารถ เมาเรือ': '9. 乗り物酔い止め', '10. ยาสำหรับโรคตา': '10. 目薬', '11. ยาสำหรับโรคปากและลำคอ': '11. 口・喉用薬', '12. ยาใส่แผล ล้างแผล': '12. 創傷ケア・洗浄薬', '13. ยารักษาแผลติดเชื้อ ไฟไหม้ น้ำร้อนลวก': '13. 感染創・火傷治療薬', '14. ยาบรรเทาอาการปวดกล้ามเนื้อ แมลงกัดต่อย': '14. 筋肉痛・虫刺され用薬', '15. ยาสำหรับโรคผิวหนัง': '15. 皮膚薬', '16. ยาบำรุงร่างกาย': '16. 栄養補助薬'
+    }
+  };
+
+  const unitText = {
+    en: { 'เม็ด': 'tablet(s)', 'แผง': 'strip(s)', 'ขวด': 'bottle(s)', 'กล่อง': 'box(es)', 'หลอด': 'tube(s)', 'ซอง': 'sachet(s)', 'ชิ้น': 'item(s)' },
+    jp: { 'เม็ด': '錠', 'แผง': 'シート', 'ขวด': '本', 'กล่อง': '箱', 'หลอด': '本', 'ซอง': '袋', 'ชิ้น': '個' }
+  };
+
+  const statusKey = { 'พร้อมใช้งาน': 'statusReady', 'ใกล้หมด': 'statusLow', 'หมดสต๊อก': 'statusOut', 'หมดอายุ': 'statusExpired' };
+  const serverMessageKey = {
+    'ขอให้ท่านหายป่วยไวๆ': { en: 'Wishing you a quick recovery.', jp: '早く回復されますように。' },
+    'เพิ่มรายการยาสำเร็จ': { en: 'Medicine item added successfully.', jp: '薬品情報を追加しました。' },
+    'อัปเดตข้อมูลสำเร็จ': { en: 'Data updated successfully.', jp: 'データを更新しました。' },
+    'รหัสพนักงานไม่ถูกต้อง ไม่มีสิทธิ์เข้าถึง': { en: 'Invalid Staff ID or access denied.', jp: 'スタッフIDが無効、または権限がありません。' },
+    'เข้าสู่ระบบสำเร็จ': { en: 'Login successful.', jp: 'ログインしました。' },
+    'ไม่พบข้อมูลยานี้ในระบบ': { en: 'This medicine was not found in the system.', jp: 'この薬品はシステムに見つかりません。' },
+    'จำนวนยาไม่เพียงพอ': { en: 'Not enough medicine stock.', jp: '薬品の在庫が不足しています。' },
+    'บันทึกการเบิกยาสำเร็จ': { en: 'Medicine request saved successfully.', jp: '薬品申請を保存しました。' }
+  };
+
+  let currentLang = localStorage.getItem('tscMedLang') || 'th';
+  let currentAdminName = '';
+  let currentStockData = [];
+  let allRecords = [];
+  let currentMedicines = [];
+  let requestedMedicineItems = [];
+  let modalStock;
+  let editModal;
+
+  function t(key) { return (dict[currentLang] && dict[currentLang][key]) || dict.th[key] || key; }
+  function translateMessage(message) { return currentLang === 'th' ? message : ((serverMessageKey[message] && serverMessageKey[message][currentLang]) || message); }
+  function localizeCategory(cat) { return currentLang === 'th' ? cat : ((categoryText[currentLang] && categoryText[currentLang][cat]) || cat); }
+  function localizeUnit(unit) { return currentLang === 'th' ? unit : ((unitText[currentLang] && unitText[currentLang][unit]) || unit); }
+  function localizeStatus(status) { return t(statusKey[status] || status); }
+  function medDisplayName(med) { return currentLang === 'en' && med.nameEN ? med.nameEN : med.nameTH; }
+
+  function setText(selector, key, html = false) {
+    document.querySelectorAll(selector).forEach(el => {
+      if (html) el.innerHTML = t(key);
+      else el.textContent = t(key);
+    });
+  }
+  function setPlaceholder(selector, key) { document.querySelectorAll(selector).forEach(el => el.setAttribute('placeholder', t(key))); }
+  function setTitle(selector, key) { document.querySelectorAll(selector).forEach(el => el.setAttribute('title', t(key))); }
+
+  function setSelectOptions(selectId, options, placeholderKey, selectedValue = '') {
+    const select = document.getElementById(selectId);
+    if (!select) return;
+    select.innerHTML = `<option value="" disabled ${selectedValue ? '' : 'selected'}>${t(placeholderKey)}</option>`;
+    options.forEach(opt => {
+      const value = typeof opt === 'object' ? opt.value : opt;
+      const label = typeof opt === 'object' ? opt.label : opt;
+      const selected = String(value) === String(selectedValue) ? 'selected' : '';
+      select.innerHTML += `<option value="${escapeHtml(value)}" ${selected}>${label}</option>`;
+    });
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>'"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[ch]));
+  }
+
+  function applyLanguage() {
+    document.documentElement.lang = currentLang === 'jp' ? 'ja' : currentLang;
+    const selector = document.getElementById('langSelector');
+    if (selector) selector.value = currentLang;
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (dict[currentLang] && dict[currentLang][key]) el.innerHTML = t(key);
+    });
+
+    // Static labels / headings not fully marked in the original HTML
+    setText('#homeView h3 + p', 'homeSubtitle');
+    setPlaceholder('#filterName', 'phFilterName');
+    setPlaceholder('#filterCompany', 'phFilterCompany');
+    setTitle('#homeView button[onclick="clearFilters()"]', 'btnReset');
+    setText('#requestView .card-header p', 'formSubtitle');
+    setText('#infoMedNoImage', 'noImage', true);
+    setText('#medInfoBox .col-md-5 .small', 'enName');
+    setText('#infoUnit2', 'unitDefault');
+
+    setText('#loginView h4', 'adminAccess');
+    setText('#loginView p', 'adminLoginHelp');
+    setText('#loginView button[onclick="loginAdmin()"]', 'btnLogin');
+    setText('#loginView button[onclick="showView(\'homeView\')"]', 'btnBack');
+    setPlaceholder('#adminCode', 'phAdminCode');
+
+    setText('#adminView h3', 'adminTitle', true);
+    const adminSub = document.querySelector('#adminView h3 + p');
+    if (adminSub) adminSub.innerHTML = `${t('adminSubtitle')} <span id="adminNameDisplay" class="fw-bold text-primary">${escapeHtml(currentAdminName)}</span>`;
+    setText('#adminView button[onclick="showAddStockModal()"]', 'btnAddNew');
+    setText('#adminView button[onclick="showView(\'homeView\')"]', 'btnLogout');
+    const statKeys = ['statTotalItems','statRemain','statLow','statExp','statReqToday','statReqMonth'];
+    document.querySelectorAll('#adminView .stat-card .text-muted').forEach((el, i) => { if (statKeys[i]) el.textContent = t(statKeys[i]); });
+    setText('#adminView .card:nth-of-type(1) .card-header h5', 'symptomTitle', true);
+    setText('#adminView .card:nth-of-type(2) .card-header h5', 'stockTitle', true);
+    updateStockTableHeaders();
+    updateModalStaticText();
+    updateGenderOptions();
+
+    if (document.getElementById('reqCategory')) refreshCategorySelect('reqCategory');
+    if (document.getElementById('addCat')) refreshCategorySelect('addCat');
+    if (document.getElementById('editCat')) refreshCategorySelect('editCat');
+    if (document.getElementById('reqMed') && !document.getElementById('reqMed').value) {
+      document.getElementById('reqMed').innerHTML = `<option value="" disabled selected>${t('selectCategoryFirst')}</option>`;
+    }
+    if (allRecords.length) displayTable(allRecords);
+    if (currentStockData.length) renderStockRows();
+    renderSymptomStats();
+  }
+
+  function updateStockTableHeaders() {
+    const keys = ['stockCategory','stockMedName','stockImport','stockRemain','stockUnit','stockMfg','stockExp','stockRecorder','stockStatus','stockAction'];
+    document.querySelectorAll('#stockTable thead th').forEach((th, i) => { if (keys[i]) th.textContent = t(keys[i]); });
+  }
+
+  function updateModalStaticText() {
+    setText('#addStockModal .modal-title', 'addModalTitle', true);
+    setText('#editStockModal .modal-title', 'editModalTitle', true);
+    const addKeys = ['addCat','addMedTH','addMedEN','imgUrl','addQty','addUnit','addMfg','addExp','addLot'];
+    document.querySelectorAll('#addStockModal label').forEach((el, i) => { if (addKeys[i]) el.textContent = t(addKeys[i]); });
+    const editKeys = ['editCat','editMedTH','editMedEN','imgUrl','editImportQty','editRemainQty','editUnit','editMfg','editExp','editLot'];
+    document.querySelectorAll('#editStockModal label').forEach((el, i) => { if (editKeys[i]) el.textContent = t(editKeys[i]); });
+    setText('#btnAddStockSubmit', 'btnSave');
+    setText('#btnEditStockSubmit', 'btnUpdate');
+    setPlaceholder('#addMedTH', 'phMedTH'); setPlaceholder('#addMedEN', 'phMedEN'); setPlaceholder('#addImgUrl', 'phImg'); setPlaceholder('#addUnit', 'phUnit'); setPlaceholder('#addLot', 'phLot');
+    setPlaceholder('#editImgUrl', 'phImg');
+  }
+
+  function updateGenderOptions() {
+    const select = document.getElementById('reqGender');
+    const selected = select ? select.value : '';
+    if (!select) return;
+    select.innerHTML = `
+      <option value="" disabled ${selected ? '' : 'selected'}>${t('genderPlaceholder')}</option>
+      <option value="ชาย" ${selected === 'ชาย' ? 'selected' : ''}>${t('genderMale')}</option>
+      <option value="หญิง" ${selected === 'หญิง' ? 'selected' : ''}>${t('genderFemale')}</option>
+      <option value="อื่นๆ" ${selected === 'อื่นๆ' ? 'selected' : ''}>${t('genderOther')}</option>`;
+  }
+
+  function refreshCategorySelect(selectId, selectedValue) {
+    const select = document.getElementById(selectId);
+    if (!select) return;
+    const current = selectedValue !== undefined ? selectedValue : select.value;
+    const options = MEDICINE_CATEGORIES.map(cat => ({ value: cat, label: localizeCategory(cat) }));
+    setSelectOptions(selectId, options, 'selectCategory', current);
+  }
+
+  function changeLanguage(lang) {
+    currentLang = lang || 'th';
+    localStorage.setItem('tscMedLang', currentLang);
+    applyLanguage();
+  }
+
+  function showView(viewId) {
+    document.querySelectorAll('.view-section').forEach(el => el.style.display = 'none');
+    const targetView = document.getElementById(viewId);
+    targetView.style.opacity = '0';
+    targetView.style.display = 'block';
+    setTimeout(() => { targetView.style.transition = 'opacity 0.4s'; targetView.style.opacity = '1'; }, 10);
+    applyLanguage();
+    if (viewId === 'homeView') loadHomeData();
+    if (viewId === 'requestView') initRequestForm();
+  }
+
+  function loadHomeData() {
+    const tbody = document.getElementById('historyTbody');
+    if (tbody) tbody.innerHTML = `<tr><td colspan="6" class="text-center py-5"><div class="spinner-border text-corporate" role="status"></div><div class="mt-2 text-muted small">${t('loadingData')}</div></td></tr>`;
+    google.script.run.withSuccessHandler(renderHistoryTable).getBorrowRecords();
+  }
+
+  function renderHistoryTable(data) { allRecords = data || []; displayTable(allRecords); }
+
+  function normalizeRow(row) {
+    const normRow = {};
+    for (let key in row) {
+      if (Object.prototype.hasOwnProperty.call(row, key)) {
+        const cleanKey = key.trim().replace(/\s+/g, '').toLowerCase();
+        normRow[cleanKey] = row[key];
+        normRow[key.trim()] = row[key];
+      }
+    }
+    return normRow;
+  }
+
+  function displayTable(data) {
+    const tbody = document.getElementById('historyTbody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    if (!data || data.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-5"><i class="fas fa-inbox fa-3x mb-3 text-light"></i><br>${t('noHistory')}</td></tr>`;
+      return;
+    }
+    data.forEach(row => {
+      const normRow = normalizeRow(row);
+      const dateStr = normRow['วันที่'] || normRow['วันที่เบิก'] || normRow['date'] || '-';
+      const nameStr = normRow['ชื่อ-สกุล'] || normRow['ชื่อสกุล'] || normRow['ชื่อ'] || normRow['name'] || '-';
+      const compStr = normRow['บริษัท'] || normRow['company'] || '-';
+      const sympStr = normRow['อาการป่วย'] || normRow['อาการ'] || normRow['symptom'] || '-';
+      const medTH = normRow['ชื่อยา/th'] || normRow['ชื่อยาth'] || normRow['ชื่อยา'] || normRow['medth'] || '-';
+      const medEN = normRow['ชื่อยา/en'] || normRow['ชื่อยาen'] || normRow['meden'] || '';
+      const medStr = medEN ? `<div class="fw-bold text-corporate">${currentLang === 'en' ? escapeHtml(medEN) : escapeHtml(medTH)}</div><div class="small text-muted">${currentLang === 'en' ? escapeHtml(medTH) : escapeHtml(medEN)}</div>` : `<div class="fw-bold text-corporate">${escapeHtml(medTH)}</div>`;
+      const qty = normRow['จำนวน'] || normRow['จำนวนที่เบิก'] || normRow['qty'] || '';
+      const unit = normRow['หน่วยยา'] || normRow['หน่วย'] || normRow['unit'] || '';
+      const qtyStr = qty + (unit ? ' ' + localizeUnit(unit) : '');
+      tbody.innerHTML += `
+        <tr>
+          <td><span class="small text-muted"><i class="far fa-calendar-alt me-1"></i> ${escapeHtml(dateStr)}</span></td>
+          <td class="fw-medium text-dark">${escapeHtml(nameStr)}</td>
+          <td class="text-muted">${escapeHtml(compStr)}</td>
+          <td class="text-truncate text-muted" style="max-width: 150px;" title="${escapeHtml(sympStr)}">${escapeHtml(sympStr)}</td>
+          <td>${medStr}</td>
+          <td class="text-center"><span class="badge bg-light-purple text-corporate px-3 py-2 border">${escapeHtml(qtyStr)}</span></td>
+        </tr>`;
+    });
+  }
+
+  function filterTable() {
+    const fDate = document.getElementById('filterDate').value;
+    const fName = document.getElementById('filterName').value.toLowerCase();
+    const fComp = document.getElementById('filterCompany').value.toLowerCase();
+    const filtered = allRecords.filter(row => {
+      const normRow = normalizeRow(row);
+      const dateStr = String(normRow['วันที่'] || normRow['วันที่เบิก'] || normRow['date'] || '');
+      const nameStr = String(normRow['ชื่อ-สกุล'] || normRow['ชื่อสกุล'] || normRow['ชื่อ'] || normRow['name'] || '').toLowerCase();
+      const compStr = String(normRow['บริษัท'] || normRow['company'] || '').toLowerCase();
+      let matchDate = true;
+      if (fDate) {
+        const parts = fDate.split('-');
+        const thFormat = `${parts[2]}/${parts[1]}/${parts[0]}`;
+        matchDate = dateStr.includes(thFormat);
+      }
+      return matchDate && nameStr.includes(fName) && compStr.includes(fComp);
+    });
+    displayTable(filtered);
+  }
+
+  function clearFilters() {
+    document.getElementById('filterDate').value = '';
+    document.getElementById('filterName').value = '';
+    document.getElementById('filterCompany').value = '';
+    displayTable(allRecords);
+  }
+
+  function showRequestForm() { showView('requestView'); }
+
+  function initRequestForm() {
+    document.getElementById('medRequestForm').reset();
+    requestedMedicineItems = [];
+    document.getElementById('medInfoBox').style.display = 'none';
+    document.getElementById('reqDate').value = new Date().toLocaleString(currentLang === 'jp' ? 'ja-JP' : currentLang === 'en' ? 'en-US' : 'th-TH');
+    refreshCategorySelect('reqCategory');
+    const medSelect = document.getElementById('reqMed');
+    medSelect.innerHTML = `<option value="" disabled selected>${t('selectCategoryFirst')}</option>`;
+    medSelect.disabled = true;
+    document.getElementById('reqQty').value = '';
+    document.getElementById('infoUnit2').textContent = t('unitDefault');
+    renderMedicineCart();
+    applyLanguage();
+  }
+
+  function loadMedicines() {
+    const cat = document.getElementById('reqCategory').value;
+    const medSelect = document.getElementById('reqMed');
+    medSelect.innerHTML = `<option value="" disabled selected>${t('loading')}</option>`;
+    medSelect.disabled = true;
+    google.script.run.withSuccessHandler(meds => {
+      currentMedicines = meds || [];
+      medSelect.innerHTML = `<option value="" disabled selected>${t('selectMedicine')}</option>`;
+      currentMedicines.forEach((m, index) => { medSelect.innerHTML += `<option value="${index}">${escapeHtml(medDisplayName(m))}</option>`; });
+      medSelect.disabled = false;
+    }).getMedicinesByCategory(cat);
+  }
+
+  function displayMedInfo() {
+    const index = document.getElementById('reqMed').value;
+    if (index === '') return;
+    const med = currentMedicines[index];
+    const imgEl = document.getElementById('infoMedImage');
+    const noImgEl = document.getElementById('infoMedNoImage');
+    if (med.imageUrl) { imgEl.src = med.imageUrl; imgEl.style.display = 'block'; noImgEl.style.display = 'none'; }
+    else { imgEl.src = ''; imgEl.style.display = 'none'; noImgEl.style.display = 'block'; }
+    document.getElementById('infoMedEN').innerText = med.nameEN || '-';
+    document.getElementById('infoExp').innerText = med.exp;
+    document.getElementById('infoStock').innerText = med.remainQty;
+    document.getElementById('infoUnit1').innerText = localizeUnit(med.unit);
+    document.getElementById('infoUnit2').innerText = localizeUnit(med.unit);
+    document.getElementById('reqQty').max = med.remainQty;
+    if (!document.getElementById('reqQty').value) document.getElementById('reqQty').value = 1;
+    sanitizeReqQty();
+    document.getElementById('medInfoBox').style.display = 'block';
+  }
+
+  function getCartQtyByMedicineName(medTH) {
+    return requestedMedicineItems
+      .filter(item => item.medTH === medTH)
+      .reduce((sum, item) => sum + (parseInt(item.qty, 10) || 0), 0);
+  }
+
+  function sanitizeReqQty() {
+    const qtyInput = document.getElementById('reqQty');
+    if (!qtyInput) return;
+
+    let maxQty = parseInt(qtyInput.max, 10);
+    let qty = parseInt(qtyInput.value, 10);
+
+    if (Number.isNaN(qty) || qty < 1) qty = 1;
+    if (!Number.isNaN(maxQty) && maxQty > 0 && qty > maxQty) qty = maxQty;
+
+    qtyInput.value = qty;
+  }
+
+  function changeReqQty(step) {
+    const qtyInput = document.getElementById('reqQty');
+    if (!qtyInput) return;
+
+    const maxQty = parseInt(qtyInput.max, 10);
+    let qty = parseInt(qtyInput.value, 10);
+    if (Number.isNaN(qty) || qty < 1) qty = 1;
+
+    qty += step;
+    if (qty < 1) qty = 1;
+    if (!Number.isNaN(maxQty) && maxQty > 0 && qty > maxQty) qty = maxQty;
+
+    qtyInput.value = qty;
+    qtyInput.dispatchEvent(new Event('input'));
+  }
+
+  function addMedicineItem() {
+    const medIndex = document.getElementById('reqMed').value;
+    if (medIndex === '') { Swal.fire(t('alertWarning'), t('alertChooseMed'), 'warning'); return; }
+
+    const med = currentMedicines[medIndex];
+    const qtyInput = document.getElementById('reqQty');
+    const qty = parseInt(qtyInput.value, 10);
+
+    if (!qty || qty < 1) { Swal.fire(t('alertWarning'), t('alertQtyInvalid'), 'warning'); return; }
+
+    const currentCartQty = getCartQtyByMedicineName(med.nameTH);
+    if (currentCartQty + qty > med.remainQty) {
+      document.getElementById('qtyError').classList.remove('d-none');
+      Swal.fire(t('alertWarning'), t('alertDuplicateLimit'), 'warning');
+      return;
+    }
+
+    document.getElementById('qtyError').classList.add('d-none');
+
+    const existing = requestedMedicineItems.find(item => item.medTH === med.nameTH);
+    if (existing) {
+      existing.qty += qty;
+    } else {
+      requestedMedicineItems.push({
+        category: document.getElementById('reqCategory').value,
+        medTH: med.nameTH,
+        medEN: med.nameEN || '',
+        qty: qty,
+        unit: med.unit || '',
+        remainQty: med.remainQty || 0,
+        exp: med.exp || '',
+        imageUrl: med.imageUrl || ''
+      });
+    }
+
+    qtyInput.value = '';
+    renderMedicineCart();
+    Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: t('alertItemAdded'), showConfirmButton: false, timer: 1200 });
+  }
+
+  function removeMedicineItem(index) {
+    requestedMedicineItems.splice(index, 1);
+    renderMedicineCart();
+  }
+
+  function renderMedicineCart() {
+    const tbody = document.getElementById('medicineCartTbody');
+    const counter = document.getElementById('medicineCartCount');
+    if (!tbody) return;
+
+    counter.textContent = requestedMedicineItems.length;
+
+    if (!requestedMedicineItems.length) {
+      tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted small">${t('cartEmpty')}</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = requestedMedicineItems.map((item, index) => `
+      <tr>
+        <td class="text-center fw-bold">${index + 1}</td>
+        <td>
+          <div class="fw-bold text-corporate">${escapeHtml(item.medTH)}</div>
+          <div class="small text-muted">${escapeHtml(item.medEN || '-')} | ${escapeHtml(localizeCategory(item.category))}</div>
+        </td>
+        <td class="text-center fw-bold">${item.qty} ${escapeHtml(localizeUnit(item.unit))}</td>
+        <td class="text-center text-success">${item.remainQty} ${escapeHtml(localizeUnit(item.unit))}</td>
+        <td class="text-center">
+          <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeMedicineItem(${index})" title="${t('cartAction')}">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function submitForm(e) {
+    e.preventDefault();
+
+    if (!requestedMedicineItems.length) {
+      Swal.fire(t('alertWarning'), t('alertAddItemFirst'), 'warning');
+      return;
+    }
+
+    const formData = {
+      name: document.getElementById('reqName').value.trim(),
+      company: document.getElementById('reqCompany').value.trim(),
+      gender: document.getElementById('reqGender').value,
+      symptom: document.getElementById('reqSymptom').value.trim(),
+      items: requestedMedicineItems.map(item => ({
+        category: item.category,
+        medTH: item.medTH,
+        medEN: item.medEN,
+        qty: parseInt(item.qty, 10),
+        unit: item.unit
+      }))
+    };
+
+    const btn = document.getElementById('btnSubmit');
+    btn.disabled = true;
+    btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> ${t('alertSaving')}`;
+
+    google.script.run.withSuccessHandler(res => {
+      btn.disabled = false;
+      btn.innerHTML = `<i class="fas fa-paper-plane me-2"></i> <span data-i18n="btnSubmit">${t('btnSubmitMulti')}</span>`;
+      if (res.success) {
+        Swal.fire({ title: t('alertSaved'), text: translateMessage(res.message), icon: 'success', confirmButtonColor: '#7b5ab5' }).then(() => showView('homeView'));
+      } else {
+        Swal.fire(t('alertError'), translateMessage(res.message), 'error');
+      }
+    }).submitMedicineRequest(formData);
+  }
+
+  function showAdminLogin() {
+    showView('loginView');
+    document.getElementById('adminCode').value = '';
+  }
+
+  function loginAdmin() {
+    const code = document.getElementById('adminCode').value.trim();
+    if (!code) { Swal.fire(t('alertWarning'), t('alertAdminCode'), 'warning'); return; }
+    google.script.run.withSuccessHandler(res => {
+      if (res && res.success) {
+        currentAdminName = res.name || '';
+        const nameDisplay = document.getElementById('adminNameDisplay');
+        if (nameDisplay) nameDisplay.innerText = currentAdminName;
+        showView('adminView');
+        loadAdminDashboard();
+      } else {
+        Swal.fire(t('alertError'), translateMessage((res && res.message) || t('alertAdminInvalid')), 'error');
+      }
+    }).validateAdminCode(code);
+  }
+
+  function loadAdminDashboard() {
+    google.script.run.withSuccessHandler(data => {
+      document.getElementById('statTotalItems').innerText = data.totalItems;
+      document.getElementById('statRemain').innerText = data.totalRemaining;
+      document.getElementById('statLow').innerText = data.lowStock;
+      document.getElementById('statExp').innerText = data.expired;
+      document.getElementById('statReqToday').innerText = data.reqToday;
+      document.getElementById('statReqMonth').innerText = data.reqMonth;
+      currentStockData = data.stockList || [];
+      renderStockRows();
+      renderSymptomStats();
+    }).getStockDashboard();
+  }
+
+  function renderStockRows() {
+    const tbody = document.getElementById('stockTbody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    if (!currentStockData.length) {
+      tbody.innerHTML = `<tr><td colspan="10" class="text-center text-muted py-5">${t('noData')}</td></tr>`;
+      return;
+    }
+    currentStockData.forEach((item, index) => {
+      const impQty = parseInt(item.importQty, 10) || 0;
+      const remQty = parseInt(item.remainQty, 10) || 0;
+      let badgeClass = 'status-green';
+      let qtyColorClass = 'text-success';
+      let statusText = item.status;
+      if (statusText === 'หมดอายุ') { badgeClass = 'status-red'; qtyColorClass = 'text-danger'; }
+      else if (remQty === 0) { badgeClass = 'status-red'; qtyColorClass = 'text-danger'; statusText = 'หมดสต๊อก'; }
+      else if (impQty > 0 && remQty <= (impQty * 0.10)) { badgeClass = 'status-yellow'; qtyColorClass = 'text-warning'; statusText = 'ใกล้หมด'; }
+      else { badgeClass = 'status-green'; qtyColorClass = 'text-success'; statusText = 'พร้อมใช้งาน'; }
+      const imgHtml = item.imageUrl ? `<img src="${escapeHtml(item.imageUrl)}" class="med-img-thumbnail me-3" onerror="this.src='https://placehold.co/45x45/f4f6f9/ccc?text=No+Img'">` : `<div class="med-img-placeholder me-3"><i class="fas fa-pills"></i></div>`;
+      tbody.innerHTML += `
+        <tr>
+          <td><span class="text-muted small">${escapeHtml(localizeCategory(item.category))}</span></td>
+          <td><div class="d-flex align-items-center">${imgHtml}<div><div class="fw-bold text-corporate">${escapeHtml(currentLang === 'en' && item.medEN ? item.medEN : item.medTH)}</div><div class="small text-muted">${escapeHtml(currentLang === 'en' && item.medEN ? item.medTH : (item.medEN || '-'))}</div></div></div></td>
+          <td class="text-center">${escapeHtml(item.importQty)}</td>
+          <td class="fw-bold text-center fs-6 ${qtyColorClass}">${escapeHtml(item.remainQty)}</td>
+          <td class="text-center text-muted">${escapeHtml(localizeUnit(item.unit))}</td>
+          <td class="small text-muted">${escapeHtml(item.mfg)}</td>
+          <td class="small text-muted">${escapeHtml(item.exp)}</td>
+          <td class="text-center small fw-bold text-primary">${escapeHtml(item.recorder || '-')}</td>
+          <td class="text-center"><span class="status-badge ${badgeClass}">${localizeStatus(statusText)}</span></td>
+          <td class="text-center"><button class="btn btn-sm btn-outline-primary shadow-sm" onclick="openEditModal(${index})" title="${t('editTitleAttr')}"><i class="fas fa-edit"></i></button></td>
+        </tr>`;
+    });
+  }
+
+  function renderSymptomStats() {
+    const container = document.getElementById('symptomStatsContainer');
+    if (!container) return;
+    container.innerHTML = '';
+    if (!allRecords.length) {
+      container.innerHTML = `<div class="col-12 text-center text-muted small py-3">${t('noSymptoms')}</div>`;
+      return;
+    }
+    const symptomCounts = {};
+    let totalSymptomsCount = 0;
+    allRecords.forEach(row => {
+      const normRow = normalizeRow(row);
+      const symptom = String(normRow['อาการป่วย'] || normRow['อาการ'] || normRow['symptom'] || '').trim();
+      if (symptom && symptom !== '-') { symptomCounts[symptom] = (symptomCounts[symptom] || 0) + 1; totalSymptomsCount++; }
+    });
+    const sortedSymptoms = Object.keys(symptomCounts).map(key => ({ symptom: key, count: symptomCounts[key] })).sort((a, b) => b.count - a.count).slice(0, 6);
+    if (!sortedSymptoms.length) {
+      container.innerHTML = `<div class="col-12 text-center text-muted small py-3">${t('noSymptoms')}</div>`;
+      return;
+    }
+    const colors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
+    sortedSymptoms.forEach((item, index) => {
+      const color = colors[index % colors.length];
+      const percent = totalSymptomsCount > 0 ? Math.round((item.count / totalSymptomsCount) * 100) : 0;
+      container.innerHTML += `
+        <div class="col-md-4 col-sm-6">
+          <div class="p-3 border rounded bg-light h-100">
+            <div class="d-flex justify-content-between align-items-end mb-2">
+              <span class="fw-bold text-dark text-truncate d-block" style="max-width: 70%;" title="${escapeHtml(item.symptom)}">${escapeHtml(item.symptom)}</span>
+              <span class="badge ${color} rounded-pill">${item.count} ${t('times')}</span>
+            </div>
+            <div class="progress" style="height: 6px;"><div class="progress-bar ${color}" role="progressbar" style="width: ${percent}%" aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100"></div></div>
+            <div class="text-end text-muted small mt-1">${percent}% ${t('percentAll')}</div>
+          </div>
+        </div>`;
+    });
+  }
+
+  function showAddStockModal() {
+    if (!modalStock) modalStock = new bootstrap.Modal(document.getElementById('addStockModal'));
+    document.getElementById('addStockForm').reset();
+    refreshCategorySelect('addCat');
+    updateModalStaticText();
+    modalStock.show();
+  }
+
+  function formatDateForSheet(dateStr) {
+    if (!dateStr) return '';
+    const p = dateStr.split('-');
+    return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : dateStr;
+  }
+  function parseDateForInput(dateStr) {
+    if (!dateStr) return '';
+    const p = dateStr.split('/');
+    return p.length === 3 ? `${p[2]}-${p[1].padStart(2, '0')}-${p[0].padStart(2, '0')}` : '';
+  }
+
+  function submitNewStock(e) {
+    e.preventDefault();
+    const data = {
+      category: document.getElementById('addCat').value,
+      nameTH: document.getElementById('addMedTH').value,
+      nameEN: document.getElementById('addMedEN').value,
+      imageUrl: document.getElementById('addImgUrl').value,
+      qty: document.getElementById('addQty').value,
+      unit: document.getElementById('addUnit').value,
+      mfg: formatDateForSheet(document.getElementById('addMfg').value),
+      exp: formatDateForSheet(document.getElementById('addExp').value),
+      lot: document.getElementById('addLot').value,
+      adminName: currentAdminName
+    };
+    const btn = document.getElementById('btnAddStockSubmit');
+    btn.disabled = true;
+    btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> ${t('alertSaving')}`;
+    google.script.run.withSuccessHandler(res => {
+      btn.disabled = false;
+      btn.innerHTML = `<i class="fas fa-save me-2"></i> ${t('btnSave')}`;
+      if (res.success) {
+        modalStock.hide();
+        Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: translateMessage(res.message) || t('alertAddSuccess'), showConfirmButton: false, timer: 1500 });
+        loadAdminDashboard();
+      } else { Swal.fire(t('alertError'), translateMessage(res.message), 'error'); }
+    }).addMedicineStock(data);
+  }
+
+  function openEditModal(index) {
+    if (!editModal) editModal = new bootstrap.Modal(document.getElementById('editStockModal'));
+    const item = currentStockData[index];
+    refreshCategorySelect('editCat', item.category);
+    document.getElementById('editRowIndex').value = item.rowIndex;
+    document.getElementById('editMedTH').value = item.medTH;
+    document.getElementById('editMedEN').value = item.medEN || '';
+    document.getElementById('editImgUrl').value = item.imageUrl || '';
+    document.getElementById('editImportQty').value = item.importQty;
+    document.getElementById('editRemainQty').value = item.remainQty;
+    document.getElementById('editUnit').value = item.unit;
+    document.getElementById('editMfg').value = parseDateForInput(item.mfg);
+    document.getElementById('editExp').value = parseDateForInput(item.exp);
+    document.getElementById('editLot').value = item.lot || '';
+    updateModalStaticText();
+    editModal.show();
+  }
+
+  function submitEditStock(e) {
+    e.preventDefault();
+    const data = {
+      rowIndex: document.getElementById('editRowIndex').value,
+      category: document.getElementById('editCat').value,
+      nameTH: document.getElementById('editMedTH').value,
+      nameEN: document.getElementById('editMedEN').value,
+      imageUrl: document.getElementById('editImgUrl').value,
+      importQty: document.getElementById('editImportQty').value,
+      remainQty: document.getElementById('editRemainQty').value,
+      unit: document.getElementById('editUnit').value,
+      mfg: formatDateForSheet(document.getElementById('editMfg').value),
+      exp: formatDateForSheet(document.getElementById('editExp').value),
+      lot: document.getElementById('editLot').value,
+      adminName: currentAdminName
+    };
+    const btn = document.getElementById('btnEditStockSubmit');
+    btn.disabled = true;
+    btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> ${t('alertUpdating')}`;
+    google.script.run.withSuccessHandler(res => {
+      btn.disabled = false;
+      btn.innerHTML = `<i class="fas fa-save me-2"></i> ${t('btnUpdate')}`;
+      if (res.success) {
+        editModal.hide();
+        Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: translateMessage(res.message) || t('alertUpdateSuccess'), showConfirmButton: false, timer: 1500 });
+        loadAdminDashboard();
+      } else { Swal.fire(t('alertError'), translateMessage(res.message), 'error'); }
+    }).updateMedicineStock(data);
+  }
+
+  window.onload = () => {
+    const selector = document.getElementById('langSelector');
+    if (selector) selector.value = currentLang;
+    applyLanguage();
+    loadHomeData();
+  };
+</script>
+
+</body>
+</html>
