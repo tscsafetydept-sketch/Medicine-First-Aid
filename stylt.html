@@ -1,0 +1,249 @@
+<style>
+  /* Color Variables */
+  :root {
+    --primary-purple: #6B4BA3;
+    --corporate-color: #4A3B69;
+    --light-purple: #E6E6FA;
+    --light-gray: #F8F9FA;
+    --light-green: #D4EDDA;
+    --success-green: #28a745;
+  }
+
+  body {
+    font-family: 'Prompt', sans-serif;
+    background-color: #f4f6f9;
+    color: #333;
+  }
+
+  /* Typography */
+  .text-corporate { color: var(--corporate-color); }
+  .bg-light-purple { background-color: var(--light-purple) !important; }
+  
+  /* Logo Placeholder */
+  .logo-box {
+    width: 36px;
+    height: 36px;
+    background: var(--primary-purple);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Buttons */
+  .btn-primary-custom {
+    background-color: var(--primary-purple);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    transition: 0.3s;
+  }
+  .btn-primary-custom:hover {
+    background-color: var(--corporate-color);
+    color: white;
+    transform: translateY(-2px);
+  }
+  
+  .btn-corporate {
+    background-color: var(--corporate-color);
+    color: white;
+  }
+  .btn-corporate:hover {
+    background-color: #352a4b;
+    color: white;
+  }
+
+  .btn-light-green {
+    background-color: var(--light-green);
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+  .btn-light-green:hover {
+    background-color: #c3e6cb;
+  }
+
+  /* Cards & Forms */
+  .card {
+    border-radius: 12px;
+  }
+  .form-control, .form-select {
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    border: 1px solid #ddd;
+  }
+  .form-control:focus, .form-select:focus {
+    border-color: var(--primary-purple);
+    box-shadow: 0 0 0 0.2rem rgba(107, 75, 163, 0.25);
+  }
+
+  /* Tables */
+  .table {
+    font-size: 0.95rem;
+  }
+  .table th {
+    font-weight: 500;
+    color: var(--corporate-color);
+    border-bottom: 2px solid #ddd;
+  }
+  .table tbody tr {
+    transition: 0.2s;
+  }
+  .table tbody tr:hover {
+    background-color: #f1f3f5;
+  }
+
+  /* Badges */
+  .status-badge {
+    padding: 0.35em 0.8em;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: 500;
+  }
+  .status-green { background-color: var(--light-green); color: #155724; }
+  .status-yellow { background-color: #fff3cd; color: #856404; }
+  .status-red { background-color: #f8d7da; color: #721c24; }
+
+  /* Dashboard Stats */
+  .stat-card {
+    transition: 0.3s;
+  }
+  .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .table-responsive {
+      font-size: 0.85rem;
+    }
+    .btn {
+      font-size: 0.9rem;
+    }
+  }
+
+  /* Multiple medicine request cart */
+  .medicine-picker-box {
+    background: #fbfbff;
+    border: 1px solid rgba(107, 75, 163, 0.12);
+  }
+  .medicine-cart-card {
+    border: 1px solid rgba(107, 75, 163, 0.12) !important;
+  }
+  .medicine-cart-table th {
+    font-size: 0.82rem;
+    white-space: nowrap;
+  }
+  .medicine-cart-table td {
+    vertical-align: middle;
+  }
+  @media (max-width: 768px) {
+    .medicine-picker-box {
+      padding: 1rem !important;
+    }
+    .medicine-cart-table {
+      font-size: 0.82rem;
+    }
+    .medicine-cart-table .btn {
+      padding: 0.25rem 0.5rem;
+    }
+  }
+
+
+  /* Quantity control - balanced and easy to click */
+  .qty-control-wrap {
+    display: grid;
+    grid-template-columns: 44px minmax(64px, 1fr) 44px auto;
+    align-items: stretch;
+    width: 100%;
+    min-height: 46px;
+    border: 1px solid #d9dce7;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(65, 47, 102, 0.04);
+  }
+
+  .qty-control-wrap:focus-within {
+    border-color: var(--primary-purple);
+    box-shadow: 0 0 0 0.22rem rgba(107, 75, 163, 0.14);
+  }
+
+  .qty-btn {
+    border: 0;
+    background: #f4f1fb;
+    color: var(--corporate-color);
+    font-weight: 700;
+    min-width: 44px;
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.18s ease;
+  }
+
+  .qty-btn:hover,
+  .qty-btn:focus {
+    background: var(--primary-purple);
+    color: #fff;
+    outline: none;
+  }
+
+  .qty-input {
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    text-align: center;
+    font-weight: 700;
+    color: var(--corporate-color);
+    min-width: 64px;
+    height: 46px;
+    padding: 0.45rem 0.2rem !important;
+    background: #fff;
+  }
+
+  .qty-input::-webkit-outer-spin-button,
+  .qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .qty-input[type=number] {
+    -moz-appearance: textfield;
+  }
+
+  .qty-unit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.75rem;
+    min-width: 58px;
+    background: #f8f9fa;
+    color: #6c757d;
+    font-weight: 500;
+    border-left: 1px solid #e5e7ef;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 768px) {
+    .qty-control-wrap {
+      grid-template-columns: 48px minmax(72px, 1fr) 48px auto;
+      min-height: 50px;
+    }
+    .qty-btn {
+      min-height: 50px;
+      min-width: 48px;
+      font-size: 1rem;
+    }
+    .qty-input {
+      height: 50px;
+      font-size: 1rem;
+    }
+    .qty-unit {
+      min-width: 64px;
+      padding: 0 0.8rem;
+    }
+  }
+
+</style>
